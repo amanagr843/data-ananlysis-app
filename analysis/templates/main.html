@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title></title>
+  </head>
+  <body>
+    <br><br><br>
+  <form action="" class="ml-4 form-inline" method="post" data-urldistrict = "{% url 'district_choices_ajax' %}" data-urlsub = "{% url 'sub_district_choices_ajax' %}" id='myform'>
+    {% csrf_token %}
+      <label for="inputState" style="padding:20px;">State</label>
+      <select name="inputState" class="form-control col-md-2" id="state" >
+        <option selected>Choose State...</option>
+        {% for state in states %}
+        <option value={{state}}>{{state}}</option>
+        {% endfor %}
+      </select>
+      <label for="inputdis" style="padding:20px;">District</label>
+      <select class="hhh form-control col-md-2" id="dis">
+        <option selected>Choose District...</option>
+        <!-- <option selected>Choose District...</option>
+        {% for district in districts %}
+        <option value={{district}}>{{district}}</option>
+        {% endfor %} -->
+      </select>
+      <label for="inputsubdis" style="padding:20px;">Sub District</label>
+      <select name="inputsubdis" class="form-control col-md-2" id="subdis">
+        <option selected>Choose Sub District...</option>
+        <!-- <option selected>Choose Sub District...</option>
+        {% for sub_district in sub_districts %}
+        <option value={{sub_district}}>{{sub_district}}</option>
+        {% endfor %} -->
+      </select>
+      <label for="quantity" style="padding:20px;">Quantity</label>
+      <select class="form-control col-md-2" name="quantity" id="qu">
+        <option value="A">SHOW ALL</option>
+        <option value="10">TOP 10</option>
+        <option value="20">TOP 20</option>
+      </select>
+    <button type="submit" class="btn btn-primary ml-4" >Submit</button>
+  </form>
+<br>
+<br>
+  <table class="table table-hover ">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">State Name</th>
+      <th scope="col">District Name</th>
+      <th scope="col">Sub District Name</th>
+      <th scope="col">Village Name</th>
+      <th scope="col">Village Population</th>
+      <th scope="col">Village Male Population</th>
+      <th scope="col">Village Female Population</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for s,d,su,vil,p,mp,fp in mylist %}
+    {% if forloop.counter <= r %}
+    <tr>
+      <td>{{forloop.counter}}</td>
+      <td>{{s}}</td>
+      <td>{{d}}</td>
+      <td>{{su}}</td>
+      <td>{{vil}}</td>
+      <td>{{p}}</td>
+      <td>{{mp}}</td>
+      <td>{{fp}}</td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+
+<script>
+  $('#state').change(function(){
+    let urldistrict = $('#myform').data('urldistrict');
+    let districtid = $(this).val();
+    $.ajax({
+      url: urldistrict,
+      data: {
+        dis : districtid
+      },
+      success: function(response){
+        $('#dis').html(response)
+      }
+    })
+  });
+
+  $('select.hhh').change(function(){
+    let urlsub = $('#myform').data('urlsub');
+    var subid = $(this).children("option:selected").text();
+    console.log(subid);
+    $.ajax({
+      url: urlsub,
+      data: {
+        sub : subid
+      },
+      success: function(response){
+        $('#subdis').html(response)
+      }
+    })
+  });
+
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+  </body>
+</html>
